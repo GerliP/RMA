@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Product List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+            integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+            integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<nav th:replace="admin :: admin"> Here will be the navbar </nav>
+<br/>
+<div class = "container">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <td>Name</td>
+            <td>Email</td>
+            <td>Product</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${users== null || users.empty}">
+            <td colspan="7">No Users</td>
+        </tr>
+        <tr th:each="user : ${users}">
+            <!-- <form action="#" th:action="@{/edit}" th:object="${user}" method="post">-->
+            <!--<td th:text="${course.id}">1</td>-->
+            <!--<td><a href="view.html" th:href="@{'/' + ${task.id}}" th:text="${task.title}">Title ...</a></td>-->
+
+            <td name="name" th:text="${user.firstName} + ' ' + ${user.lastName}" >Name...</td>
+            <td name="email" th:text="${user.email}">Email...</td>
+            <td name="products" >Product</td>
+            <td> <a href="#" th:href="@{'/user/more?id='} +${user.id}" >
+                <button id="info" class="btn btn-default" > View
+                </button></a></td>
+
+            <td> <a href="#" th:href="@{'/user/edit?id='} +${user.id}" >
+
+                <button id="edit" class="btn btn-default" > Edit
+                </button></a></td>
+            <td> <a th:href="@{'/user/delete?id='} + ${user.id}">
+                <button id="delete" class="btn btn-default" > Delete
+                </button></a></td>
+
+        </tr>
+        <!--<td th:text="${#calendars.format(task.dueTo)}">July 11, 2012 2:17:16 PM CDT</td>-->
+        </tbody>
+    </table>
+
+    <a href="/">
+        <button type="button" class="btn btn-dark" >Go Back</button>
+    </a>
+</div>
+</body>
+</html>

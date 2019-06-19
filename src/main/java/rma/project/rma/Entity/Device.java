@@ -1,20 +1,14 @@
 package rma.project.rma.Entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by gerli on 06/04/2018.
  */
-@Entity
-@Table(name = "device")
-public class Device implements Serializable {
-    @Id
-    @GeneratedValue
+public class Device {
+
     private int id;
     private String deviceId;
     private String productId;

@@ -4,21 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import rma.project.rma.Entity.Device;
 import rma.project.rma.Entity.User;
-import rma.project.rma.Repos.DeviceRepository;
-import rma.project.rma.Repos.UserRepository;
 import rma.project.rma.Config.UserServiceImpl;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import rma.project.rma.service.DeviceService;
+import rma.project.rma.service.UserService;
 
 
 /**
@@ -27,23 +20,25 @@ import java.util.List;
 @Controller
 public class HomeController {
 
-    @Autowired
-    public UserRepository userRepository;
+    private final UserServiceImpl userServiceImpl;
+
+    private final UserService userService;
+
+    private final DeviceService deviceService;
 
     @Autowired
-    public BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserServiceImpl userService;
-    @Autowired
-    public DeviceRepository deviceRepository;
+    public HomeController(UserServiceImpl userServiceImpl, UserService userService, DeviceService deviceService) {
+        this.userServiceImpl = userServiceImpl;
+        this.userService = userService;
+        this.deviceService = deviceService;
+    }
 
     @GetMapping("/")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            User user = userService.findUserByEmail(auth.getName());
+            User user = userServiceImpl.findUserByEmail(auth.getName());
             return authCheck(user);
         } else {
             modelAndView.setViewName("index");
@@ -52,7 +47,7 @@ public class HomeController {
 
     }
 
-    public ModelAndView authCheck(User user) {
+    private ModelAndView authCheck(User user) {
         ModelAndView modelAndView = new ModelAndView();
         if (user.getRole().equals("admin")) {
             modelAndView.addObject("name", "Hi " + user.getFirstName() + "!");
@@ -73,29 +68,11 @@ public class HomeController {
             modelAndView.setViewName("login");
             return modelAndView;
         } else {
-            User user = userService.findUserByEmail(auth.getName());
+            User user = userServiceImpl.findUserByEmail(auth.getName());
             return authCheck(user);
         }
     }
 
-    @GetMapping("create")
-    public String newuser() {
-        return "create";
-    }
-
-    @PostMapping("/create")
-    public String create(User user, RedirectAttributes model) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        model.addAttribute("id", user.getId());
-        return "redirect:/newuser/{id}";
-    }
-
-
-    @GetMapping("/warranty")
-    public String warrantyForm() {
-        return "warranty";
-    }
     @GetMapping("/addProduct")
     public String addProduct() {
         return "createDevice";
@@ -113,46 +90,62 @@ public class HomeController {
                     String productId,
             @RequestParam(name = "productCat", defaultValue = "NO_PRODUCT_CAT")
                     String productCat) {
-
-
-        Device device = deviceRepository.findById(id);
-        if(productId.equals(deviceRepository.findByProductId(productId))){
-
-
-
-        }
-        else if (device == null) {
+        System.out.println("before find");
+        Device device = deviceService.findOne(id);
+        System.out.println("after find");
+        if (device.getDeviceId() == "NO_ID") {
             device = new Device(productName, productId, productCat, deviceId);
-        }else {
+        } else {
             device.setProductName(productName);
             device.setProductId(productId);
             device.setProductCat(productCat);
             device.setDeviceId(deviceId);
         }
 
-        deviceRepository.save(device);
-
+        deviceService.create(device);
         ModelAndView mv = new ModelAndView("productList");
-        mv.getModel().put("productList", deviceRepository.findAll());
+        mv.getModel().put("productList", deviceService.findAll());
         mv.getModel().put("device", device);
 
         return mv;
     }
-    @GetMapping("/productList")
-    public ModelAndView productList(){
+
+    @GetMapping("/products")
+    public ModelAndView productList() {
         ModelAndView mv = new ModelAndView("productList");
-        mv.getModel().put("productList", deviceRepository.findAll());
+        mv.getModel().put("productList", deviceService.findAll());
         return mv;
     }
 
     @GetMapping("/device/delete")
-    public ModelAndView deleteProduct(@RequestParam(name="id", defaultValue = "0")int id) {
-        deviceRepository.delete(deviceRepository.findById(id));
+    public ModelAndView deleteProduct(@RequestParam(name = "id", defaultValue = "0") int id) {
+        deviceService.delete(id);
         ModelAndView mv = new ModelAndView("productList");
-        mv.getModel().put("productList", deviceRepository.findAll());
+        mv.getModel().put("productList", deviceService.findAll());
         return mv;
     }
 
+    @GetMapping("/users")
+    public ModelAndView users() {
+        ModelAndView mv = new ModelAndView("users");
+        mv.getModel().put("users", userService.findAll());
+        return mv;
+    }
 
+    @GetMapping("/user/delete")
+    public ModelAndView deleteUser(@RequestParam(name = "id", defaultValue = "0") int id) {
+        userService.delete(id);
+        ModelAndView mv = new ModelAndView("users");
+        mv.getModel().put("users", userService.findAll());
+        return mv;
+    }
+
+    @GetMapping("/user/edit")
+    public ModelAndView editUser(@RequestParam(name = "id", defaultValue = "0") int id, @ModelAttribute User user) {
+        userService.update(id, user);
+        ModelAndView mv = new ModelAndView("users");
+        mv.getModel().put("users", userService.findAll());
+        return mv;
+    }
 
 }

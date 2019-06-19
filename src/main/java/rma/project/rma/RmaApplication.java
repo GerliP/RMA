@@ -12,9 +12,9 @@ public class RmaApplication {
 		SpringApplication.run(RmaApplication.class, args);
 
 	}
+
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 }
-//	@Bean
-//	public RestTemplate restTemplate() {
-//		return new RestTemplate();
-//	}
-//}

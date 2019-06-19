@@ -1,9 +1,6 @@
 package rma.project.rma.Entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -13,13 +10,14 @@ import java.io.Serializable;
 @Table(name = "user")
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
     private String role= "user";
+    @Column(columnDefinition = "TINYINT(1)")
     private boolean active = true;
 
     public User() {

@@ -19,7 +19,7 @@
     <title>Admin view</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="admin">
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -28,14 +28,14 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">Products</a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" th:href="@{/productList}">Product list</a>
+                    <a class="dropdown-item" th:href="@{/products}">Product list</a>
                     <a class="dropdown-item" th:href="@{/addProduct}">Add product</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" th:href="@{/users}">Something else here</a>
                 </div>
             </li>
             <li class="nav-item">
-            <a class="nav-link"  href="create">Users</a>
+            <a class="nav-link"  th:href="@{/users}">Users</a>
         </li>
 
         </ul>

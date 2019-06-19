@@ -71,9 +71,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 csrf().disable().
                 authorizeRequests()
                 .antMatchers("/", "/css/**", "/js/**" ).permitAll() // antMatcher() - specifies that request to a certain path must be authenticated.
-                .antMatchers("/login","/create", "/api/**").permitAll()
-                .antMatchers("/warranty").permitAll()
-                .antMatchers("/admin/**").hasAuthority("ADMIN").anyRequest()
+                .antMatchers("/warranty", "/claimConfirmation/**").permitAll()
+                .antMatchers("/login","/create","/newuser/**", "/api/**").permitAll()
+                .antMatchers("/admin/**", "/users").hasAuthority("ADMIN").anyRequest()
                 .authenticated().and().formLogin().loginPage("/login")
                 .loginPage("/login").failureUrl("/login?error=true")
                 .defaultSuccessUrl("/")

@@ -26,10 +26,10 @@
     </div>
     <div class="col-md-8 order-md-1">
         <h4 class="mb-3">Device information</h4>
-        <form class="needs-validation" novalidate="true">
+        <form action="#" th:action="@{/warranty}" th:object="${claim}" method="post">
             <div class="mb-3">
                 <label for="productName">Product name</label>
-                <input type="text" class="form-control" id="productName" placeholder="" value="" required="true"/>
+                <input type="text" class="form-control" id="productName" name="productName" value="CX 2.00G" required="true"/>
                 <div class="invalid-feedback">
                     Valid product name is required.
                 </div>
@@ -39,7 +39,7 @@
                 <div class="input-group">
                     <div class="input-group-prepend">
                     </div>
-                    <input type="text" class="form-control" id="device-id" placeholder="Device Id" maxlength="18"
+                    <input type="text" class="form-control" id="device-id" name="deviceId" value="4567-9876-298765" maxlength="18"
                            required="true"/>
                     <div class="invalid-feedback" style="width: 100%;">
                         Device Id must be entered.
@@ -48,31 +48,32 @@
             </div>
             <div class="mb-3">
                 <label for="purchaseDate">Purchase date</label>
-                <input type="date" class="form-control" id="purchaseDate" placeholder="" value="" required="true"/>
+                <input type="date" class="form-control" id="purchaseDate" name="purchaseDate" required="true"/>
                 <div class="invalid-feedback">
-                    Valid last name is required.
+                    Valid date required.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="name"> Your name </label>
+                <input type="text" class="form-control" id="name" name="name" value="Dan User" required="true"/>
+                <div class="invalid-feedback">
+                    Valid name is required.
                 </div>
             </div>
             <div class="mb-3">
                 <label for="email">Email <span class="text-muted">(Optional)</span></label>
-                <input type="email" class="form-control" id="email" placeholder="you@example.com"/>
+                <input type="email" class="form-control" id="email" name="email" value="user@g.com"/>
                 <div class="invalid-feedback">
                     Please enter a valid email address for shipping updates.
                 </div>
             </div>
             <div class="mb-3">
                 <label for="address">Address</label>
-                <input type="text" class="form-control" id="address" placeholder="1234 Main St" required="true"/>
+                <input type="text" class="form-control" id="address" name="address" value="1234 Main St" required="true"/>
                 <div class="invalid-feedback">
                     Please enter your shipping address.
                 </div>
             </div>
-
-            <div class="mb-3">
-                <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
-                <input type="text" class="form-control" id="address2" placeholder="Apartment or suite"/>
-            </div>
-
             <div class="row">
                 <div class="col-md-5 mb-3">
                     <label for="country">Country</label>
@@ -89,7 +90,7 @@
                     <label for="state">State</label>
                     <select class="custom-select d-block w-100" id="state" required="true">
                         <option value="">Choose...</option>
-                        <option>California</option>
+                        <option>København</option>
                     </select>
                     <div class="invalid-feedback">
                         Please provide a valid state.
@@ -97,15 +98,15 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label for="zip">Zip</label>
-                    <input type="text" class="form-control" id="zip" placeholder="Postalcode" required="true" autocomplete="off"/>
+                    <input type="text" class="form-control" id="zip" placeholder="Postalcode" value="1666" name="postalCode" required="true"
+                           autocomplete="off"/>
                     <div class="invalid-feedback">
                         Zip code required.
                     </div>
                 </div>
             </div>
             <hr class="mb-4"/>
-
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Submit your claim</button>
             <br/>
         </form>
     </div>
@@ -129,9 +130,9 @@
 
 <script th:inline="javascript">
     /*<![CDATA[*/
-    document.getElementById("device-id").addEventListener('input', function (event) {
+    document.getElementById("productName").addEventListener('input', function (event) {
         var input = event.target.value;
-        document.getElementById("device-id").value = input.replace(/[^A-Fa-f\d-]/g, "");
+        document.getElementById("productName").value = input;
     });
     var counter = 0;
     var firstMAax = 5;
@@ -157,23 +158,26 @@
     /*]]>*/
 </script>
 <script>
-    $document.getElementById("zip").addEventListener('input', function (event){
-        $.get("https://dawa.aws.dk/adresser/autocomplete", function(data, status){
+    $document.getElementById("zip").addEventListener('input', function (event) {
+        $.get("https://dawa.aws.dk/adresser/autocomplete", function (data, status) {
         });
     });
-
-            alert("Data: " + data + "\nStatus: " + status);
-        });
-    });
-        var input = event.target.value;
-        var xhttp = new XMLHttpRequest();
-        {
-                document.getElementById("zip").innerHTML = this.responseText;
+    alert("Data: " + data + "\nStatus: " + status);
+    })
+    ;
+    })
+    ;
+    var input = event.target.value;
+    var xhttp = new XMLHttpRequest();
+    {
+        document.getElementById("zip").innerHTML = this.responseText;
 
         xhttp.open("GET", "https://dawa.aws.dk/adresser/autocomplete", true);
         xhttp.send();
 
-    });
+    }
+    )
+    ;
 </script>
 
 </body>

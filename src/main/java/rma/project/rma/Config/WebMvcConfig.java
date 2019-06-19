@@ -1,7 +1,9 @@
 package rma.project.rma.Config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -12,6 +14,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter{
 
+    @Autowired
+    private Environment db;
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -21,11 +26,10 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter{
     @Bean(name = "dataSource")
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-        driverManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/rma");
-        driverManagerDataSource.setUsername("user");
-        driverManagerDataSource.setPassword("1234");
+        driverManagerDataSource.setDriverClassName(db.getProperty("spring.datasource.driver-class-name"));
+        driverManagerDataSource.setUrl(db.getProperty("spring.datasource.url"));
+        driverManagerDataSource.setUsername(db.getProperty("spring.datasource.username"));
+        driverManagerDataSource.setPassword(db.getProperty("spring.datasource.password"));
         return driverManagerDataSource;
     }
-
 }
